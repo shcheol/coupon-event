@@ -1,4 +1,4 @@
-package com.hcs.couponevent.config;
+package com.shopping.mosinsa.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
