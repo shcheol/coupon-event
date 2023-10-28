@@ -1,10 +1,10 @@
-package com.hcs.couponevent;
+package com.hcs.promotion;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CouponEventApplicationTests {
+class PromotionApplicationTests {
 
 	@Test
 	void contextLoads() {

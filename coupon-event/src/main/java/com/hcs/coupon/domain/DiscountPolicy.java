@@ -1,4 +1,4 @@
-package com.hcs.couponevent.domain;
+package com.hcs.coupon.domain;
 
 public enum DiscountPolicy {
     NONE{

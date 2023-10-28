@@ -1,4 +1,4 @@
-package com.hcs.couponevent.domain;
+package com.hcs.promotion.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -14,13 +14,13 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @ToString
-public class CouponEventId implements Serializable {
+public class PromotionId implements Serializable {
 
-    @Column(name = "coupon_event_id")
+    @Column(name = "promotion_id")
     private String id;
 
-    public static CouponEventId newId() {
-        CouponEventId id = new CouponEventId();
+    public static PromotionId newId() {
+        PromotionId id = new PromotionId();
         id.id = UUID.randomUUID().toString();
         return id;
     }

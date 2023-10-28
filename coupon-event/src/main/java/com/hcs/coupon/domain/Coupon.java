@@ -1,7 +1,5 @@
 package com.hcs.coupon.domain;
 
-import com.hcs.couponevent.domain.DiscountPolicy;
-import com.hcs.couponevent.domain.CouponEventId;
 import com.hcs.member.MemberId;
 import jakarta.persistence.*;
 
@@ -13,23 +11,25 @@ public class Coupon {
 
     @EmbeddedId
     private CouponId couponId;
-
-    @Embedded
-    private CouponEventId couponEventId;
-
-    private LocalDateTime duringDate;
-
     private LocalDateTime issuedDate;
-
-    @Column(name = "discount_policy")
-    @Enumerated(EnumType.STRING)
-    private DiscountPolicy discountPolicy;
-
     @Embedded
     private MemberId memberId;
-
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private CouponState state;
+    @Embedded
+    private CouponDetails details;
+    public static Coupon create(CouponDetails details){
+        Coupon coupon = new Coupon();
+        coupon.details = details;
+        coupon.state = CouponState.CREATED;
+        return coupon;
+    }
+
+    public void issuedCoupon(MemberId memberId){
+        this.memberId = memberId;
+        this.issuedDate = LocalDateTime.now();
+        this.state = CouponState.ISSUED;
+    }
 
 }

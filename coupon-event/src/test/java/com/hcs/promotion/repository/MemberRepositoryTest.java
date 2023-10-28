@@ -1,13 +1,14 @@
-package com.hcs.couponevent.repository;
+package com.hcs.promotion.repository;
 
 import com.hcs.member.Member;
 import com.hcs.member.MemberRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -22,7 +23,7 @@ public class MemberRepositoryTest {
         Member newMember = Member.newMember();
         Member savedMember = memberRepository.save(newMember);
 
-        Assertions.assertThat(newMember).isEqualTo(savedMember);
+        assertThat(newMember).isEqualTo(savedMember);
 
     }
 
