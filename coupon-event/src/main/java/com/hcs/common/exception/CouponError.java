@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum CouponError {
 
     INVALID_PERIOD_INPUT("유효하지 않은 기간입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_QUANTITY("유효하지 않은 수량입니다.", HttpStatus.BAD_REQUEST),
+    NOT_FOUND("찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     ;
 
     private String message;

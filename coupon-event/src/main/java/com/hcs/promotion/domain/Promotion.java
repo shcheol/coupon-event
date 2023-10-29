@@ -1,11 +1,16 @@
 package com.hcs.promotion.domain;
 
+import com.hcs.common.event.Events;
+import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.coupon.domain.DiscountPolicy;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "promotion")
@@ -18,6 +23,7 @@ public class Promotion {
     @Nonnull
     private String title;
 
+    @Column(name = "contexts")
     private String context;
 
     private int quantity;
@@ -28,7 +34,7 @@ public class Promotion {
     @Embedded
     private PromotionPeriod period;
 
-    public static Promotion create(String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period) {
+    public static Promotion create(String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period, CouponDetails details) {
         Promotion promotion = new Promotion();
         promotion.setPromotionId(PromotionId.newId());
         promotion.setTitle(title);
@@ -36,7 +42,7 @@ public class Promotion {
         promotion.setQuantity(quantity);
         promotion.setDiscountPolicy(discountPolicy);
         promotion.setPeriod(period);
-
+        Events.raise(new PromotionCreatedEvent(promotion.getPromotionId(), promotion.getQuantity(), details));
         return promotion;
     }
 
@@ -62,5 +68,18 @@ public class Promotion {
 
     private void setPeriod(PromotionPeriod period) {
         this.period = period;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Promotion promotion = (Promotion) o;
+        return promotionId != null && Objects.equals(promotionId, promotion.promotionId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(promotionId);
     }
 }
