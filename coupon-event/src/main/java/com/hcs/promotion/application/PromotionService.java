@@ -5,7 +5,7 @@ import com.hcs.common.exception.CouponException;
 import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
-import com.hcs.promotion.repository.PromotionRepository;
+import com.hcs.promotion.infra.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

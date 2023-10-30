@@ -1,4 +1,4 @@
-package com.hcs.promotion.repository;
+package com.hcs.member.repository;
 
 import com.hcs.member.Member;
 import com.hcs.member.MemberRepository;
