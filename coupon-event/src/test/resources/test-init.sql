@@ -10,4 +10,5 @@ insert into coupon values ('coupon2', 'promotion1', null, 'TEN_PERCENTAGE', '202
 insert into coupon values ('coupon3', 'promotion2', null, 'TEN_PERCENTAGE', '2023-12-31', null, 'CREATED');
 insert into coupon values ('coupon4', 'promotion2', null, 'TEN_PERCENTAGE', '2023-12-31', null, 'CREATED');
 insert into coupon values ('coupon5', 'promotion3', null, 'TEN_PERCENTAGE', '2023-12-31', null, 'CREATED');
-insert into coupon values ('coupon6', 'promotion3', null, 'TEN_PERCENTAGE', '2023-12-31', null, 'CREATED');
+insert into coupon values ('coupon6', 'promotion3', null, 'TEN_PERCENTAGE', '2023-12-31', '1', 'CREATED');
+insert into member values ('1');

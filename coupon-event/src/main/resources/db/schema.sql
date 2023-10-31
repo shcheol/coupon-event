@@ -1,6 +1,3 @@
-drop table promotion;
-drop table coupon;
-
 CREATE TABLE IF NOT EXISTS promotion (
   promotion_id VARCHAR(255) NOT NULL PRIMARY KEY,
   title VARCHAR(100),

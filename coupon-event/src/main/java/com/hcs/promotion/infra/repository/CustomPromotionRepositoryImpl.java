@@ -3,6 +3,7 @@ package com.hcs.promotion.infra.repository;
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.QPromotionDto;
 import com.hcs.promotion.dto.SearchCondition;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,7 +15,8 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.hcs.promotion.domain.QPromotion.*;
+import static com.hcs.coupon.domain.QCoupon.coupon;
+import static com.hcs.promotion.domain.QPromotion.promotion;
 
 @RequiredArgsConstructor
 public class CustomPromotionRepositoryImpl implements CustomPromotionRepository {
@@ -33,7 +35,7 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 						promotion.period
 				)).from(promotion)
 				.where(
-						proceeding(condition.getNow(), condition.isProceeding())
+						proceeding(condition.now(), condition.proceeding())
 				)
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -42,9 +44,23 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 		JPAQuery<Long> count = queryFactory.select(promotion.count())
 				.from(promotion)
 				.where(
-						proceeding(condition.getNow(), condition.isProceeding())
+						proceeding(condition.now(), condition.proceeding())
 				);
 		return PageableExecutionUtils.getPage(fetch, pageable, count::fetchOne);
+	}
+
+	@Override
+	public List<Tuple> stocksGroupByPromotion(SearchCondition condition) {
+		return queryFactory.select(promotion.promotionId, promotion.count())
+				.from(promotion)
+				.leftJoin(coupon)
+				.on(promotion.promotionId.eq(coupon.promotionId))
+				.where(
+						coupon.memberId.isNull(),
+						proceeding(condition.now(), condition.proceeding())
+				)
+				.groupBy(promotion.promotionId)
+				.fetch();
 	}
 
 	private BooleanExpression proceeding(LocalDateTime now, boolean proceeding) {

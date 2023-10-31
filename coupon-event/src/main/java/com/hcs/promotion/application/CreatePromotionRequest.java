@@ -1,6 +1,5 @@
 package com.hcs.promotion.application;
 
-import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.coupon.domain.DiscountPolicy;
 import com.hcs.promotion.domain.PromotionPeriod;
 import lombok.AllArgsConstructor;

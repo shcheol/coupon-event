@@ -1,8 +1,9 @@
 package com.hcs.promotion.infra.repository;
 
+import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.SearchCondition;
-import org.assertj.core.api.Assertions;
+import com.querydsl.core.Tuple;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -28,16 +30,35 @@ class CustomPromotionRepositoryImplTest {
 		SearchCondition condition = new SearchCondition(true, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
 		List<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of).getContent();
-		Assertions.assertThat(promotions.size()).isEqualTo(1);
+		assertThat(promotions.size()).isEqualTo(1);
 	}
 
 	@Test
-	void notProceedingPromotions() {
+	void allPromotions() {
 
 		SearchCondition condition = new SearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
 		Page<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of);
 
-		Assertions.assertThat(promotions.getContent().size()).isEqualTo(2);
+		assertThat(promotions.getContent().size()).isEqualTo(3);
+	}
+
+	@Test
+	void stocksGroupByPromotion(){
+		SearchCondition condition = new SearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
+		List<Tuple> tuples = repository.stocksGroupByPromotion(condition);
+		System.out.println(tuples);
+		for (Tuple tuple : tuples) {
+			PromotionId promotionId = tuple.get(0, PromotionId.class);
+			if (promotionId.equals(PromotionId.of("promotion1"))){
+				assertThat(tuple.get(1, Long.class)).isEqualTo(2L);
+			}
+			if (promotionId.equals(PromotionId.of("promotion2"))){
+				assertThat(tuple.get(1, Long.class)).isEqualTo(2L);
+			}
+			if (promotionId.equals(PromotionId.of("promotion3"))){
+				assertThat(tuple.get(1, Long.class)).isEqualTo(1L);
+			}
+		}
 	}
 }
