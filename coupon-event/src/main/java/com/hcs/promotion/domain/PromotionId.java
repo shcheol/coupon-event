@@ -1,18 +1,19 @@
 package com.hcs.promotion.domain;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Access(AccessType.FIELD)
+@Getter
 @ToString
 public class PromotionId implements Serializable {
 

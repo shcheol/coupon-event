@@ -1,9 +1,11 @@
 package com.hcs.promotion.infra.repository;
 
+import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.SearchCondition;
 import com.querydsl.core.Tuple;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +26,14 @@ class CustomPromotionRepositoryImplTest {
 
 	@Autowired
 	private PromotionRepository repository;
+
+	@Test
+	void findById(){
+		PromotionId id = PromotionId.of("promotion1");
+		System.out.println(id);
+		Promotion promotion1 = repository.findById(id).get();
+		Assertions.assertThat(promotion1.getPromotionId()).isEqualTo(id);
+	}
 
 	@Test
 	void proceedingPromotions() {

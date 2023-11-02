@@ -30,9 +30,10 @@ public class PromotionService {
     }
 
     @Transactional
-    public Promotion findByPromotionId(PromotionId promotionId){
-        return repository.findById(promotionId).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
-    }
+    public PromotionDto findByPromotionId(String promotionId){
+		Promotion promotion = repository.findById(PromotionId.of(promotionId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
+		return PromotionDto.convert(promotion);
+	}
 
 	@Transactional
 	public Page<PromotionDto> findByPromotions(SearchCondition condition, Pageable pageable){

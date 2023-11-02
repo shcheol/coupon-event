@@ -2,10 +2,7 @@ package com.hcs.member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -13,6 +10,7 @@ import java.util.UUID;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
+@Getter
 @ToString
 public class MemberId implements Serializable {
 
@@ -24,5 +22,11 @@ public class MemberId implements Serializable {
         id.id = UUID.randomUUID().toString();
         return id;
     }
+
+	public static MemberId of(String memberId){
+		MemberId id = new MemberId();
+		id.id = memberId;
+		return id;
+	}
 
 }

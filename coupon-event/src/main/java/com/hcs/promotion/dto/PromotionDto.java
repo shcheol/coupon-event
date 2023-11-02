@@ -1,6 +1,7 @@
 package com.hcs.promotion.dto;
 
 import com.hcs.coupon.domain.DiscountPolicy;
+import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.domain.PromotionPeriod;
 import com.querydsl.core.annotations.QueryProjection;
@@ -11,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class PromotionDto {
 
-	private PromotionId promotionId;
+	private String promotionId;
 
 	private String title;
 
@@ -25,11 +26,20 @@ public class PromotionDto {
 
 	@QueryProjection
 	public PromotionDto(PromotionId promotionId, String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period) {
-		this.promotionId = promotionId;
+		this.promotionId = promotionId.getId();
 		this.title = title;
 		this.context = context;
 		this.quantity = quantity;
 		this.discountPolicy = discountPolicy;
 		this.period = period;
+	}
+
+	public static PromotionDto convert(Promotion promotion) {
+		return new PromotionDto(promotion.getPromotionId(),
+				promotion.getTitle(),
+				promotion.getContext(),
+				promotion.getQuantity(),
+				promotion.getDiscountPolicy(),
+				promotion.getPeriod());
 	}
 }

@@ -27,6 +27,6 @@ class PromotionServiceTest {
                 new PromotionPeriod(LocalDateTime.now(), LocalDateTime.of(2024, 10, 28, 00, 00))
         );
         Promotion promotion = promotionService.create(createPromotionRequest);
-        Assertions.assertThat(promotion).isEqualTo(promotionService.findByPromotionId(promotion.getPromotionId()));
+        Assertions.assertThat(promotion).isEqualTo(promotionService.findByPromotionId(promotion.getPromotionId().toString()));
     }
 }
