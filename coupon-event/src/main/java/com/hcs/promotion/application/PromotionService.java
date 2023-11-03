@@ -40,4 +40,8 @@ public class PromotionService {
 		return repository.findPromotionsByCondition(condition, pageable);
 	}
 
+	public void joinPromotion(String memberId, String promotionId){
+
+	}
+
 }

@@ -1,6 +1,9 @@
-package com.hcs.member;
+package com.hcs.web.login;
 
-import com.hcs.member.login.LoginForm;
+import com.hcs.member.Member;
+import com.hcs.member.MemberDto;
+import com.hcs.member.MemberId;
+import com.hcs.member.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,7 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-public class MemberController {
+public class LoginController {
 
 	private final MemberRepository repository;
 
@@ -26,7 +29,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public String login(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult) {
+	public String login(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
 
 		if(!StringUtils.hasText(loginForm.username())){
 			bindingResult.addError(new FieldError("loginForm", "username","아이디를 입력해주세요."));
@@ -39,10 +42,15 @@ public class MemberController {
 			return "loginForm";
 		}
 
+		HttpSession session = request.getSession();
+
+		session.setAttribute(LoginConst.LOGIN_MEMBER, MemberDto.convert(member.get()));
+
 		return "redirect:/";
 	}
 
-	@PostMapping("/logout")
+
+	@GetMapping("/logout")
 	public String logout(HttpServletRequest request){
 		HttpSession session = request.getSession(false);
 

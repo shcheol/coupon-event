@@ -1,19 +1,18 @@
 package com.hcs.promotion.ui;
 
 import com.hcs.common.exception.CouponException;
+import com.hcs.member.MemberDto;
 import com.hcs.promotion.application.PromotionService;
-import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.SearchCondition;
+import com.hcs.web.login.LoginConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -37,6 +36,20 @@ public class PromotionController {
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
 		model.addAttribute("promotion", promotionDto);
 		return "promotion/promotionDetail";
+	}
+
+	@PostMapping("/promotions/{promotionId}")
+	public String joinPromotion(@SessionAttribute(name = LoginConst.LOGIN_MEMBER, required = false) MemberDto loginMember,
+						 @PathVariable("promotionId") String promotionId, Model model){
+		log.info("{}",promotionId);
+		log.info(String.valueOf(loginMember));
+		if (loginMember == null){
+			return "loginForm";
+		}
+
+		promotionService.joinPromotion(loginMember.id(), promotionId);
+
+		return "promotion/promotionResult";
 	}
 
 	@ExceptionHandler(CouponException.class)
