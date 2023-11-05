@@ -1,10 +1,11 @@
 package com.hcs.promotion.ui;
 
 import com.hcs.common.exception.CouponException;
+import com.hcs.coupon.application.CouponService;
 import com.hcs.member.MemberDto;
 import com.hcs.promotion.application.PromotionService;
 import com.hcs.promotion.dto.PromotionDto;
-import com.hcs.promotion.dto.SearchCondition;
+import com.hcs.promotion.dto.PromotionSearchCondition;
 import com.hcs.web.login.LoginConst;
 import com.hcs.web.login.LoginForm;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +27,10 @@ public class PromotionController {
 
 	private final PromotionService promotionService;
 
+	private final CouponService couponService;
+
 	@GetMapping("/promotions")
-	public String promotions(SearchCondition condition, Pageable pageable, Model model){
+	public String promotions(PromotionSearchCondition condition, Pageable pageable, Model model){
 		log.info(condition.toString());
 		Page<PromotionDto> promotions = promotionService.findByPromotions(condition, pageable);
 		model.addAttribute("promotions", promotions);
@@ -41,6 +44,8 @@ public class PromotionController {
 
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
 		model.addAttribute("promotion", promotionDto);
+		int count = couponService.count(promotionId);
+		model.addAttribute("stock",count);
 		if(loginMember == null){
 			model.addAttribute("member", new MemberDto(""));
 		}else {

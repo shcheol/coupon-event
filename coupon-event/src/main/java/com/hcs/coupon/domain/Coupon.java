@@ -5,13 +5,17 @@ import com.hcs.common.exception.CouponException;
 import com.hcs.member.MemberId;
 import com.hcs.promotion.domain.PromotionId;
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="coupon")
+@Getter
 public class Coupon {
 
     @EmbeddedId
@@ -52,4 +56,16 @@ public class Coupon {
         this.state = CouponState.ISSUED;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Coupon coupon = (Coupon) o;
+        return couponId != null && Objects.equals(couponId, coupon.couponId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(couponId);
+    }
 }

@@ -2,7 +2,7 @@ package com.hcs.promotion.infra.repository;
 
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.QPromotionDto;
-import com.hcs.promotion.dto.SearchCondition;
+import com.hcs.promotion.dto.PromotionSearchCondition;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -24,7 +24,7 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<PromotionDto> findPromotionsByCondition(SearchCondition condition, Pageable pageable) {
+	public Page<PromotionDto> findPromotionsByCondition(PromotionSearchCondition condition, Pageable pageable) {
 
 		List<PromotionDto> fetch = queryFactory.select(new QPromotionDto(
 						promotion.promotionId,
@@ -50,7 +50,7 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	}
 
 	@Override
-	public List<Tuple> stocksGroupByPromotion(SearchCondition condition) {
+	public List<Tuple> stocksGroupByPromotion(PromotionSearchCondition condition) {
 		return queryFactory.select(promotion.promotionId, promotion.count())
 				.from(promotion)
 				.leftJoin(coupon)

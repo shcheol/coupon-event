@@ -3,7 +3,7 @@ package com.hcs.promotion.infra.repository;
 import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.dto.PromotionDto;
-import com.hcs.promotion.dto.SearchCondition;
+import com.hcs.promotion.dto.PromotionSearchCondition;
 import com.querydsl.core.Tuple;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class CustomPromotionRepositoryImplTest {
 	@Test
 	void proceedingPromotions() {
 
-		SearchCondition condition = new SearchCondition(true, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
+		PromotionSearchCondition condition = new PromotionSearchCondition(true, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
 		List<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of).getContent();
 		assertThat(promotions.size()).isEqualTo(1);
@@ -45,7 +45,7 @@ class CustomPromotionRepositoryImplTest {
 	@Test
 	void allPromotions() {
 
-		SearchCondition condition = new SearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
+		PromotionSearchCondition condition = new PromotionSearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
 		Page<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of);
 
@@ -54,7 +54,7 @@ class CustomPromotionRepositoryImplTest {
 
 	@Test
 	void stocksGroupByPromotion(){
-		SearchCondition condition = new SearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
+		PromotionSearchCondition condition = new PromotionSearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		List<Tuple> tuples = repository.stocksGroupByPromotion(condition);
 		System.out.println(tuples);
 		for (Tuple tuple : tuples) {

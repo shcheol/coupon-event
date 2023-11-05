@@ -26,9 +26,9 @@ public class PromotionId implements Serializable {
         return id;
     }
 
-	public static PromotionId of(String of) {
-		PromotionId id = new PromotionId();
-		id.id = of;
-		return id;
+	public static PromotionId of(String id) {
+		PromotionId promotionId = new PromotionId();
+        promotionId.id = id;
+		return promotionId;
 	}
 }

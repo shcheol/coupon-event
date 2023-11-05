@@ -12,17 +12,17 @@ import lombok.ToString;
 @ToString
 public class PromotionDto {
 
-	private String promotionId;
+	private final String promotionId;
 
-	private String title;
+	private final String title;
 
-	private String context;
+	private final String context;
 
-	private int quantity;
+	private final int quantity;
 
-	private DiscountPolicy discountPolicy;
+	private final DiscountPolicy discountPolicy;
 
-	private PromotionPeriod period;
+	private final PromotionPeriod period;
 
 	@QueryProjection
 	public PromotionDto(PromotionId promotionId, String title, String context, int quantity, DiscountPolicy discountPolicy, PromotionPeriod period) {

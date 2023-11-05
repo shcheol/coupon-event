@@ -1,7 +1,6 @@
 package com.hcs.coupon.ui;
 
 import com.hcs.coupon.application.CouponService;
-import com.hcs.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,17 +27,4 @@ public class CouponController {
 		return "coupon/couponDetail";
 	}
 
-	@GetMapping("/coupons")
-	public String issueCoupon(IssueCouponRequest request, Model model){
-
-
-		//실패 - 중복요청
-
-		// 수량 부족
-
-		//
-
-		// 성공
-		return "coupon/couponDetail";
-	}
 }

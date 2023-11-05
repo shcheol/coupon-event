@@ -2,9 +2,9 @@ package com.hcs.promotion.dto;
 
 import java.time.LocalDateTime;
 
-public record SearchCondition(Boolean proceeding, String title, LocalDateTime now) {
+public record PromotionSearchCondition(Boolean proceeding, String title, LocalDateTime now) {
 
-	public SearchCondition {
+	public PromotionSearchCondition {
 		if (proceeding == null) {
 			proceeding = true;
 		}
