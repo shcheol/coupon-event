@@ -31,14 +31,8 @@
 
 <script th:inline="javascript">
     function handleOrder() {
-        const uid = '<%=(String)session.getAttribute("uid")%>';
-        console.log(uid);
-        if (uid === "null") {
-            alert("로그인을 먼저 하세요!");
-        }else{
-            alert("발급 요청");
-            $("#issueCoupon").submit();
-        }
+        alert("발급 요청");
+        $("#issueCoupon").submit();
     }
 </script>
 
@@ -51,7 +45,8 @@
 </script>
 
 <form id="issueCoupon" th:action="@{/promotions/{id}(id=${promotion.promotionId})}" method="post">
-        <input type="hidden" name="promotionId" th:value="${promotion.promotionId}">
+    <input type="hidden" name="promotionId" th:value="${promotion.promotionId}">
+    <input type="hidden" name="memberId" th:value="${member.id}">
 </form>
 </body>
 </html>

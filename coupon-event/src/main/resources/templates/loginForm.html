@@ -16,7 +16,7 @@
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <div class="container">
-    <form action="" th:action th:object="${loginForm}" method="post">
+    <form action="/login" th:action th:object="${loginForm}" method="post">
         <div class="mb-3">
             <label for="username" class="form-label">아이디</label>
             <input type="text" class="form-control" id="username" name="username" th:errorclass="field-error" th:field="*{username}" >

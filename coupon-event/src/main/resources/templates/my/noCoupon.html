@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>내 주문</title>
-  <th:block th:replace="fragments/layout :: cssjs"/>
+  <th:block th:replace="~{fragments/layout :: cssjs}"/>
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header"></div>
+<div th:replace="~{fragments/layout :: header}"></div>
 
 <div class="container">
   <div class="alert alert-danger" role="alert">
@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<div th:replace="fragments/layout :: footer"></div>
+<div th:replace="~{fragments/layout :: footer}"></div>
 
 </body>
 </html>

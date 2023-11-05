@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>마이샵</title>
-    <th:block th:replace="fragments/layout :: cssjs"/>
+    <th:block th:replace="~{fragments/layout :: cssjs}"/>
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header"></div>
+<div th:replace="~{fragments/layout :: header}"></div>
 
 <div class="container">
     <h2><span th:text="|로그인 사용자: ${member.id}|">user</span> 님</h2>
@@ -16,7 +16,7 @@
     </ul>
 </div>
 
-<div th:replace="fragments/layout :: footer"></div>
+<div th:replace="~{fragments/layout :: footer}"></div>
 
 </body>
 </html>

@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>마이샵</title>
-    <th:block th:replace="fragments/layout :: cssjs"/>
+    <th:block th:replace="~{fragments/layout :: cssjs}"/>
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header"></div>
+<div th:replace="~{fragments/layout :: header}"></div>
 
 <div class="container">
     <h2>쿠폰 목록</h2>
@@ -34,7 +34,7 @@
     </table>
 </div>
 
-<div th:replace="fragments/layout :: footer"></div>
+<div th:replace="~{fragments/layout :: footer}"></div>
 
 </body>
 </html>
