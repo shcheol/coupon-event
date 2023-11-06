@@ -4,21 +4,18 @@ import com.hcs.common.exception.CouponException;
 import com.hcs.coupon.application.CouponService;
 import com.hcs.member.MemberDto;
 import com.hcs.promotion.application.PromotionService;
-import com.hcs.promotion.dto.PromotionDto;
-import com.hcs.promotion.dto.PromotionSearchCondition;
+import com.hcs.promotion.dto.*;
 import com.hcs.web.login.LoginConst;
-import com.hcs.web.login.LoginForm;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -54,20 +51,26 @@ public class PromotionController {
 		return "promotion/promotionDetail";
 	}
 
-	@PostMapping("/promotions/{promotionId}")
-	public String joinPromotion(@SessionAttribute(name = LoginConst.LOGIN_MEMBER, required = false) MemberDto loginMember,
-								@PathVariable("promotionId") String promotionId, Model model,HttpServletRequest request, HttpServletResponse response) throws IOException {
-		log.info("{}",promotionId);
-		log.info(String.valueOf(loginMember));
-		if (loginMember == null){
-			response.sendRedirect("/login?redirectURL=" + request.getRequestURI());
-			model.addAttribute("loginForm", new LoginForm(""));
-			return "loginForm";
+	@PostMapping("/promotions")
+	@ResponseBody
+	public PromotionDto create(@RequestBody CreatePromotionRequest request){
+		log.info("request {}", request);
+		return promotionService.create(request);
+	}
+
+	@PatchMapping(value = "/promotions", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<JoinResult> joinPromotion(@RequestBody JoinPromotionRequest request) {
+		String promotionId = request.promotionId();
+		String memberId = request.memberId();
+		log.info("promotionId: {}, memberId: {}", promotionId, memberId);
+		if (!StringUtils.hasText(memberId)){
+			return ResponseEntity.badRequest().body(new JoinResult("login first"));
 		}
 
-		promotionService.joinPromotion(loginMember.id(), promotionId);
+		promotionService.joinPromotion(memberId, promotionId);
 
-		return "promotion/promotionResult";
+		return ResponseEntity.ok(new JoinResult("request..."));
 	}
 
 	@ExceptionHandler(CouponException.class)

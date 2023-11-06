@@ -1,7 +1,9 @@
 package com.hcs.coupon.infra.repository;
 
 import com.hcs.coupon.domain.CouponId;
+import com.hcs.coupon.dto.CouponDto;
 import com.hcs.coupon.dto.CouponSearchCondition;
+import com.hcs.coupon.dto.QCouponDto;
 import com.hcs.member.MemberId;
 import com.hcs.promotion.domain.PromotionId;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -28,8 +30,24 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository{
                 ).fetch();
     }
 
-    @Override
-    public CouponId findCouponWithMember(CouponSearchCondition condition) {
+	@Override
+	public List<CouponDto> findMyCoupons(String memberId) {
+
+		return queryFactory.select(
+						new QCouponDto(
+								coupon.couponId,
+								coupon.promotionId,
+								coupon.issuedDate,
+								coupon.memberId,
+								coupon.state,
+								coupon.details
+						)).from(coupon)
+				.where(coupon.memberId.eq(MemberId.of(memberId)))
+				.fetch();
+	}
+
+	@Override
+    public CouponId findAssignedCoupon(CouponSearchCondition condition) {
         return queryFactory.select(
                         coupon.couponId
                 ).from(coupon)

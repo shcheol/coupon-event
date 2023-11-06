@@ -26,9 +26,9 @@
         </thead>
         <tbody>
         <tr th:each="coupon : ${coupons}">
-            <td><a href="#" th:href="@{/coupons/{memberId}(memberId=${member.id})}" th:text="${member.id}">쿠폰</a></td>
-            <td th:text="${order.totalAmounts}">금액</td>
-            <td th:text="#{${order.state}}">상태</td>
+            <td><a href="#" th:href="@{/coupons/{id}(id=${coupon.couponId})}" th:text="${coupon.couponId}">쿠폰</a></td>
+            <td th:text="${coupon.getDetails().getDiscountPolicy()}">할인율</td>
+            <td th:text="#{${coupon.getState()}}">상태</td>
         </tr>
         </tbody>
     </table>

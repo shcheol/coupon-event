@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>프로모션 상세</title>
     <th:block th:replace="~{fragments/layout :: cssjs}"/>
+    <input type="hidden" id = "promotionId"  th:value="${promotion.getPromotionId()}">
+    <input type="hidden" id = "memberId" th:value="${member.id}">
 </head>
 <body>
 
@@ -17,7 +19,14 @@
                     <h5 class="card-title" th:text="${promotion.title}">타이틀</h5>
                     </h5>
                     <p class="card-text">
+                        아이디:<span th:text="${promotion.promotionId}"></span>
+                        <br>
                         상세 : <span th:text="${promotion.context}"></span>
+                        <br>
+                        할인률 : <span th:text="${promotion.discountPolicy}"></span>
+                        <br>
+                        기간 : <span th:text="|${promotion.getPeriod().getStartDate()}  ${promotion.getPeriod().getEndDate()}|"></span>
+                        <br>
                         <br>
                         수량 : <span th:text="${promotion.quantity}"></span>
                         <br>
@@ -32,23 +41,28 @@
 <div th:replace="~{/fragments/layout :: footer}"></div>
 
 <script th:inline="javascript">
-    function handleOrder() {
-        alert("발급 요청");
-        $("#issueCoupon").submit();
-    }
-</script>
+    document.querySelector("#joinPromotion").addEventListener("click", (e) =>{
+        const pId = document.querySelector("#promotionId").value;
+        const mId = document.querySelector("#memberId").value;
 
-<script th:inline="javascript">
-    $(function () {
-        $("#joinPromotion").click(function () {
-            handleOrder();
-        });
+        fetch(`/promotions`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+            },
+            body: JSON.stringify({
+                memberId: mId,
+                promotionId: pId,
+            }),
+        }).then((response) => response.json())
+            .then((data) => {
+                alert(data.result);
+            })
+            .catch(error => {
+                alert("요청실패");
+                console.log(error);
+            });
     });
 </script>
-
-<form id="issueCoupon" th:action="@{/promotions/{id}(id=${promotion.promotionId})}" method="post">
-    <input type="hidden" name="promotionId" th:value="${promotion.promotionId}">
-    <input type="hidden" name="memberId" th:value="${member.id}">
-</form>
 </body>
 </html>

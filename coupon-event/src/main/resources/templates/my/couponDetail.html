@@ -15,26 +15,29 @@
     <table class="table">
         <tbody>
         <tr>
-            <td rowspan="2">쿠폰</td>
-            <td>번호</td>
-            <td th:text="${coupon.number}"></td>
+            <td>쿠폰번호</td>
+            <td th:text="${coupon.couponId}"></td>
         </tr>
         <tr>
             <td>상태</td>
             <td th:text="#{${coupon.state}}"></td>
         </tr>
         <tr>
+            <td>발급일자</td>
+            <td th:text="#{${coupon.getIssuedDate()}}"></td>
+        </tr>
+        <tr>
             <td>할인율</td>
-            <td th:text="${coupon.discountPolicy}"></td>
+            <td th:text="${coupon.getDetails().getDiscountPolicy()}"></td>
         </tr>
         <tr>
             <td>만료기간</td>
-            <td th:text="${coupon.duringDate}"></td>
+            <td th:text="${coupon.getDetails().getDuringDate()}"></td>
         </tr>
         </tbody>
     </table>
 
-    <a class="btn btn-dark" href="/my/coupons" role="button">쿠폰 목록 보기</a>
+    <a class="btn btn-dark" th:href="@{/my/coupons/{id}(id=${member.id})}" role="button">쿠폰 목록 보기</a>
     <a class="btn btn-dark" href="/home" role="button">첫 화면으로 이동하기</a>
 </div>
 

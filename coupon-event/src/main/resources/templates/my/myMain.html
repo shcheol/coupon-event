@@ -12,7 +12,7 @@
 <div class="container">
     <h2><span th:text="|로그인 사용자: ${member.id}|">user</span> 님</h2>
     <ul>
-        <li><a href="/my/coupons">쿠폰 목록 보기</a></li>
+        <li><a th:href="@{/my/coupons/{id}(id=${member.id})}">쿠폰 목록 보기</a></li>
     </ul>
 </div>
 

@@ -7,6 +7,7 @@ import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.coupon.domain.CouponIssuedEvent;
 import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
+import com.hcs.promotion.dto.CreatePromotionRequest;
 import com.hcs.promotion.dto.PromotionDto;
 import com.hcs.promotion.dto.PromotionSearchCondition;
 import com.hcs.promotion.infra.repository.PromotionRepository;
@@ -22,27 +23,32 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PromotionService {
 
-    private final PromotionRepository repository;
+	private final PromotionRepository repository;
 
-    @Transactional
-    public Promotion create(CreatePromotionRequest request){
-        return repository.save(
-                Promotion.create(request.getTitle(), request.getContext(), request.getQuality(),
-                request.getDiscountPolicy(), request.getPeriod(), new CouponDetails(LocalDateTime.now(), request.getDiscountPolicy())));
-    }
+	@Transactional
+	public PromotionDto create(CreatePromotionRequest request) {
+		return PromotionDto.convert(
+				repository.save(
+						Promotion.create(request.title(),
+								request.context(),
+								request.quantity(),
+								request.discountPolicy(),
+								request.period(),
+								new CouponDetails(LocalDateTime.now(), request.discountPolicy()))));
+	}
 
-    @Transactional
-    public PromotionDto findByPromotionId(String promotionId){
+	@Transactional
+	public PromotionDto findByPromotionId(String promotionId) {
 		Promotion promotion = repository.findById(PromotionId.of(promotionId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND));
 		return PromotionDto.convert(promotion);
 	}
 
 	@Transactional
-	public Page<PromotionDto> findByPromotions(PromotionSearchCondition condition, Pageable pageable){
+	public Page<PromotionDto> findByPromotions(PromotionSearchCondition condition, Pageable pageable) {
 		return repository.findPromotionsByCondition(condition, pageable);
 	}
 
-	public void joinPromotion(String memberId, String promotionId){
+	public void joinPromotion(String memberId, String promotionId) {
 
 		Events.raise(new CouponIssuedEvent(memberId, promotionId));
 	}

@@ -5,6 +5,7 @@ import com.hcs.common.exception.CouponException;
 import com.hcs.coupon.domain.Coupon;
 import com.hcs.coupon.domain.CouponId;
 import com.hcs.coupon.domain.CouponIssuedEvent;
+import com.hcs.coupon.dto.CouponDto;
 import com.hcs.coupon.dto.CouponSearchCondition;
 import com.hcs.coupon.infra.repository.CouponRepository;
 import com.hcs.member.MemberId;
@@ -18,17 +19,16 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CouponService {
 
     private final CouponRepository couponRepository;
 
-    @Transactional
     public void createAll(PromotionCreatedEvent event){
         couponRepository.saveAll(
                 Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
-    @Transactional
     public int count(String promotionId){
         CouponSearchCondition condition = new CouponSearchCondition(null, promotionId);
 
@@ -37,10 +37,9 @@ public class CouponService {
 
         return coupons.size();
     }
-    @Transactional
     public CouponId issue(CouponIssuedEvent event){
         CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
-        CouponId couponWithMember = couponRepository.findCouponWithMember(condition);
+        CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
         if (couponWithMember != null){
             throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
         }
@@ -56,4 +55,13 @@ public class CouponService {
         coupon.get().issuedCoupon(MemberId.of(event.getMemberId()));
         return coupon.get().getCouponId();
     }
+
+	public List<CouponDto> myCoupons(String memberId){
+		return couponRepository.findMyCoupons(memberId);
+	}
+
+	public CouponDto findById(String couponId){
+		return CouponDto.convert(
+				couponRepository.findById(CouponId.of(couponId)).orElseThrow(() -> new CouponException(CouponError.NOT_FOUND)));
+	}
 }
