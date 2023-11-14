@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: ENC(3tEJsW68wLmy8yIfSpUt11kz8IV3BF7RWnBexibhm25KE6LDechiMbn0kwzfuKuabIzC2+ssJTTxx32rQiy2Yjff5j3eHZuO)
@@ -27,3 +28,5 @@ logging:
     com.hcs: debug
     org.hibernate.type: trace
     org.springframework.jdbc.core: trace
+server:
+  port: 9999

@@ -33,7 +33,7 @@ class PromotionServiceTest {
 						new CouponDetails(LocalDateTime.of(2024, 10, 28, 00, 00), DiscountPolicy.TEN_PERCENTAGE));
         PromotionDto promotion = promotionService.create(createPromotionRequest);
         PromotionDto promotionDto = promotionService.findByPromotionId(promotion.getPromotionId());
-        assertThat(promotion.getPromotionId()).isEqualTo(PromotionId.of(promotionDto.getPromotionId()));
+        assertThat(promotion.getPromotionId()).isEqualTo(promotionDto.getPromotionId());
         assertThat(promotion.getTitle()).isEqualTo(promotionDto.getTitle());
     }
 }
