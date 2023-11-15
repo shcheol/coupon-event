@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
+import static com.hcs.web.login.LoginConst.*;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
 
 	private final MemberRepository repository;
 
-	private final String LOGIN_FORM = "loginForm";
 
 	@GetMapping("/login")
 	public String login(@ModelAttribute("loginForm") LoginForm loginForm) {
@@ -45,7 +46,7 @@ public class LoginController {
 		}
 
 		HttpSession session = request.getSession();
-		session.setAttribute(LoginConst.LOGIN_MEMBER, MemberDto.convert(member.get()));
+		session.setAttribute(LOGIN_MEMBER, MemberDto.convert(member.get()));
 
 		return "redirect:/";
 	}
