@@ -39,7 +39,7 @@ class CustomPromotionRepositoryImplTest {
 		PromotionSearchCondition condition = new PromotionSearchCondition(true, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		PageRequest of = PageRequest.of(0, 3);
 		List<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of).getContent();
-		assertThat(promotions.size()).isEqualTo(1);
+		assertThat(promotions).hasSize(1);
 	}
 
 	@Test
@@ -49,14 +49,13 @@ class CustomPromotionRepositoryImplTest {
 		PageRequest of = PageRequest.of(0, 3);
 		Page<PromotionDto> promotions = repository.findPromotionsByCondition(condition, of);
 
-		assertThat(promotions.getContent().size()).isEqualTo(3);
+		assertThat(promotions.getContent()).hasSize(3);
 	}
 
 	@Test
 	void stocksGroupByPromotion(){
 		PromotionSearchCondition condition = new PromotionSearchCondition(false, "title1", LocalDateTime.of(2023, 10, 31, 0, 0));
 		List<Tuple> tuples = repository.stocksGroupByPromotion(condition);
-		System.out.println(tuples);
 		for (Tuple tuple : tuples) {
 			PromotionId promotionId = tuple.get(0, PromotionId.class);
 			if (promotionId.equals(PromotionId.of("promotion1"))){

@@ -44,18 +44,18 @@ class CouponServiceTest {
     void issueCouponFail1() {
         service.issue(new CouponIssuedEvent("1", "promotion2"));
         service.issue(new CouponIssuedEvent("2", "promotion2"));
-
-        assertThrows(CouponException.class,
-                () -> service.issue(new CouponIssuedEvent("3", "promotion2")));
+		CouponIssuedEvent failEvent = new CouponIssuedEvent("3", "promotion2");
+		assertThrows(CouponException.class,
+                () -> service.issue(failEvent));
     }
 
     @Test
     @DisplayName("쿠폰발급 실패 중복참여")
     void issueCouponFail2() {
         service.issue(new CouponIssuedEvent("1", "promotion2"));
-
-        assertThrows(CouponException.class,
-                () -> service.issue(new CouponIssuedEvent("1", "promotion2")));
+		CouponIssuedEvent failEvent = new CouponIssuedEvent("1", "promotion2");
+		assertThrows(CouponException.class,
+                () -> service.issue(failEvent));
     }
 
 

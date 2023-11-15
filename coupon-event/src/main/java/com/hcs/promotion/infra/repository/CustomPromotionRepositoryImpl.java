@@ -64,6 +64,6 @@ public class CustomPromotionRepositoryImpl implements CustomPromotionRepository 
 	}
 
 	private BooleanExpression proceeding(LocalDateTime now, boolean proceeding) {
-		return now!=null? proceeding?promotion.period.endDate.after(now).and(promotion.period.startDate.before(now)):null:null;
+		return now!=null && proceeding?promotion.period.endDate.after(now).and(promotion.period.startDate.before(now)):null;
 	}
 }

@@ -23,23 +23,25 @@ public class LoginController {
 
 	private final MemberRepository repository;
 
+	private final String LOGIN_FORM = "loginForm";
+
 	@GetMapping("/login")
 	public String login(@ModelAttribute("loginForm") LoginForm loginForm) {
-		return "loginForm";
+		return LOGIN_FORM;
 	}
 
 	@PostMapping("/login")
 	public String login(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
 
 		if(!StringUtils.hasText(loginForm.username())){
-			bindingResult.addError(new FieldError("loginForm", "username","아이디를 입력해주세요."));
-			return "loginForm";
+			bindingResult.addError(new FieldError(LOGIN_FORM, "username","아이디를 입력해주세요."));
+			return LOGIN_FORM;
 		}
 
 		Optional<Member> member = repository.findById(MemberId.of(loginForm.username()));
 		if (member.isEmpty()){
-			bindingResult.addError(new FieldError("loginForm", "username","없는 아이디 입니다."));
-			return "loginForm";
+			bindingResult.addError(new FieldError(LOGIN_FORM, "username","없는 아이디 입니다."));
+			return LOGIN_FORM;
 		}
 
 		HttpSession session = request.getSession();

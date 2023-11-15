@@ -7,7 +7,7 @@ public abstract class Event {
 
     private long timestamp;
 
-    public Event() {
+    protected Event() {
         this.timestamp = System.currentTimeMillis();
     }
 
