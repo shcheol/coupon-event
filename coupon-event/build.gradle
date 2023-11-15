@@ -43,8 +43,8 @@ sonar {
     properties {
         property 'sonar.host.url', 'http://150.230.252.178:9000'
         property "sonar.token", "squ_a6bae554fae971d2154448dbabde5c4f69e0ed51"
-        property "sonar.projectKey", "project:product"
-        property 'sonar.projectName', 'product'
+        property "sonar.projectKey", "project:coupon"
+        property 'sonar.projectName', 'coupon'
         property 'sonar.java.source', 17
         property 'encoding', 'UTF-8'
         property 'charSet', 'UTF-8'
