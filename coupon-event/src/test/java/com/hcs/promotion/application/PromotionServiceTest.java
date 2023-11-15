@@ -2,12 +2,9 @@ package com.hcs.promotion.application;
 
 import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.coupon.domain.DiscountPolicy;
-import com.hcs.promotion.domain.Promotion;
-import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.domain.PromotionPeriod;
 import com.hcs.promotion.dto.CreatePromotionRequest;
 import com.hcs.promotion.dto.PromotionDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +12,7 @@ import org.springframework.test.annotation.Commit;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
