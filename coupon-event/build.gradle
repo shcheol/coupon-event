@@ -49,6 +49,7 @@ sonar {
         property 'sonar.java.source', 17
         property 'encoding', 'UTF-8'
         property 'charSet', 'UTF-8'
+        property 'sonar.exclusions', '**/dto/**'
     }
 }
 tasks.named('test') {
@@ -57,9 +58,9 @@ tasks.named('test') {
 
 jacocoTestReport {
     reports {
-        xml.required = false
-        csv.required = false
-        html.required = true
+        xml.required = true
+        csv.required = true
+        html.required = false
     }
 }
 test.finalizedBy jacocoTestReport
