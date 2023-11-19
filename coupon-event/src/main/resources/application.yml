@@ -30,3 +30,12 @@ logging:
     org.springframework.jdbc.core: trace
 server:
   port: 9999
+  tomcat:
+    mbeanregistry:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
