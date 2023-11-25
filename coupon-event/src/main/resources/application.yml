@@ -1,7 +1,7 @@
 
 spring:
   datasource:
-    url: ENC(3tEJsW68wLmy8yIfSpUt11kz8IV3BF7RWnBexibhm25KE6LDechiMbn0kwzfuKuabIzC2+ssJTTxx32rQiy2Yjff5j3eHZuO)
+    url: ENC(C5coq2VePxUa73Oodsi+EH0WRdiR84qF2hlCTdQzRyErot6Qg1I4ofNdwKJ+Q0qCB0Ew4CVQSgUq8AH4z8Sj7JGT3+ZWwWmI/6BImCKvDwQ=) # rewriteBatchedStatements=true
     username: ENC(Z+kCoiiTU28oexg5wmaj/g==)
     password: ENC(RlzzorPTl/dnKbUpwlJTmRLWfKm7D+4H)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,6 +15,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 50
+        order_updates: true
+        order_inserts: true
     open-in-view: false
   sql:
     init:

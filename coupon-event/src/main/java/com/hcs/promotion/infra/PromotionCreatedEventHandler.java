@@ -23,6 +23,6 @@ public class PromotionCreatedEventHandler {
     @EventListener(PromotionCreatedEvent.class)
     public void handle(PromotionCreatedEvent event) {
         log.info("handle PromotionCreatedEvent");
-        couponService.createAll(event);
+        couponService.createAllByBatchInsert(event);
     }
 }

@@ -29,6 +29,11 @@ public class CouponService {
                 Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
+    public void createAllByBatchInsert(PromotionCreatedEvent event){
+        couponRepository.batchInsert(
+                Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
+    }
+
     public int count(String promotionId){
         CouponSearchCondition condition = new CouponSearchCondition(null, promotionId);
 
