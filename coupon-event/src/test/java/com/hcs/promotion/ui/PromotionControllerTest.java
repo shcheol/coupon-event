@@ -32,11 +32,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.hcs.web.login.LoginConst.LOGIN_MEMBER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -113,7 +115,7 @@ class PromotionControllerTest {
 
     @Test
     @DisplayName("promotion id로 조회")
-    void promotion() throws Exception {
+    void promotionNoLogin() throws Exception {
 
         PromotionDto dto = PromotionDto.convert(Promotion.create(
                 "title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
@@ -133,6 +135,36 @@ class PromotionControllerTest {
                 .andExpect(model().attribute("promotion",dto))
                 .andExpect(model().attribute("stock", stock))
                 .andExpect(model().attribute("member",new MemberDto("")))
+                .andExpect(view().name("promotion/promotionDetail"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("promotion id로 조회 로그인한 멤버")
+    void promotionLogin() throws Exception {
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(LOGIN_MEMBER, "memberId");
+
+        PromotionDto dto = PromotionDto.convert(Promotion.create(
+                "title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
+                new PromotionPeriod(before, after),
+                new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+        );
+
+        when(promotionService.findByPromotionId(any()))
+                .thenReturn(dto);
+        int stock = 3;
+        when(couponService.count(any()))
+                .thenReturn(stock);
+
+        mockMvc.perform(
+                        get("/promotions/"+dto.getPromotionId())
+                                .session(session)
+                ).andExpect(status().isOk())
+                .andExpect(model().attribute("promotion",dto))
+                .andExpect(model().attribute("stock", stock))
+                .andExpect(model().attribute("member",new MemberDto("memberId")))
                 .andExpect(view().name("promotion/promotionDetail"))
                 .andDo(print());
     }
