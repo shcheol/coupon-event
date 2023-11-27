@@ -97,4 +97,12 @@ class LoginControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andDo(print());
     }
+
+    @Test
+    void logoutNoSession() throws Exception {
+
+        mockMvc.perform(get("/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
+    }
 }
