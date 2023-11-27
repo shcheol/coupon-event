@@ -3,15 +3,22 @@ package com.hcs.promotion.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.hcs.common.event.Events;
+import com.hcs.common.event.EventsConfiguration;
+import com.hcs.common.exception.CouponError;
+import com.hcs.common.exception.CouponException;
 import com.hcs.coupon.application.CouponService;
 import com.hcs.coupon.domain.CouponDetails;
 import com.hcs.coupon.domain.DiscountPolicy;
+import com.hcs.member.MemberDto;
 import com.hcs.promotion.application.PromotionService;
+import com.hcs.promotion.domain.Promotion;
 import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.domain.PromotionPeriod;
 import com.hcs.promotion.dto.CreatePromotionRequest;
 import com.hcs.promotion.dto.JoinPromotionRequest;
 import com.hcs.promotion.dto.PromotionDto;
+import com.hcs.promotion.dto.PromotionSearchCondition;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,22 +27,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PromotionController.class)
 @ExtendWith(MockitoExtension.class)
+@Import({EventsConfiguration.class})
 class PromotionControllerTest {
 
     @Autowired
@@ -47,6 +58,8 @@ class PromotionControllerTest {
     @MockBean
     CouponService couponService;
 
+    LocalDateTime before = LocalDateTime.of(2023, 10, 28, 00, 00);
+    LocalDateTime after = LocalDateTime.of(2024, 10, 28, 00, 00);
     static ObjectMapper om;
 
     @BeforeAll
@@ -54,6 +67,74 @@ class PromotionControllerTest {
         om = new ObjectMapper();
         om.registerModule(new JavaTimeModule());
         om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    }
+
+    @Test
+    @DisplayName("promotion 목록 조회")
+    void promotionList() throws Exception {
+
+        PromotionDto dto1 = PromotionDto.convert(Promotion.create(
+                "title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
+                new PromotionPeriod(before, after),
+                new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+        );
+        PromotionDto dto2 = PromotionDto.convert(Promotion.create(
+                "title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
+                new PromotionPeriod(before, after),
+                new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+        );
+
+        PageImpl<PromotionDto> page = new PageImpl<>(List.of(dto1, dto2), PageRequest.of(0,2),2);
+
+        when(promotionService.findByPromotions(any(), any()))
+                .thenReturn(page);
+
+        mockMvc.perform(
+                        get("/promotions")
+                ).andExpect(status().isOk())
+                .andExpect(model().attribute("promotions",page))
+                .andExpect(view().name("promotion/promotionList"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("promotion 목록 조회 - 예외 발생")
+    void promotionListEx() throws Exception {
+
+        when(promotionService.findByPromotions(any(), any()))
+                .thenThrow(new CouponException(CouponError.NOT_FOUND));
+
+        mockMvc.perform(
+                        get("/promotions")
+                ).andExpect(status().isOk())
+                .andExpect(view().name("promotion/noPromotion"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("promotion id로 조회")
+    void promotion() throws Exception {
+
+        PromotionDto dto = PromotionDto.convert(Promotion.create(
+                "title", "context", 3, DiscountPolicy.TEN_PERCENTAGE,
+                new PromotionPeriod(before, after),
+                new CouponDetails(after, DiscountPolicy.TEN_PERCENTAGE))
+        );
+
+        when(promotionService.findByPromotionId(any()))
+                .thenReturn(dto);
+        int stock = 3;
+        when(couponService.count(any()))
+                .thenReturn(stock);
+
+        mockMvc.perform(
+                        get("/promotions/"+dto.getPromotionId())
+                ).andExpect(status().isOk())
+                .andExpect(model().attribute("promotion",dto))
+                .andExpect(model().attribute("stock", stock))
+                .andExpect(model().attribute("member",new MemberDto("")))
+                .andExpect(view().name("promotion/promotionDetail"))
+                .andDo(print());
     }
 
     @Test
