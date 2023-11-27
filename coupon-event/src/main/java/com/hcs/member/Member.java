@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
@@ -13,7 +12,6 @@ import java.util.Objects;
 @Table(name = "member")
 @Access(AccessType.FIELD)
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 

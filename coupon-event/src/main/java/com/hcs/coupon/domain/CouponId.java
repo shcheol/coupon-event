@@ -2,7 +2,11 @@ package com.hcs.coupon.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -10,7 +14,6 @@ import java.util.UUID;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-@ToString
 @Getter
 public class CouponId implements Serializable {
 
@@ -24,6 +27,9 @@ public class CouponId implements Serializable {
     }
 
     public static CouponId of(String id){
+        if (!StringUtils.hasText(id)){
+            throw new IllegalArgumentException();
+        }
         CouponId couponId = new CouponId();
         couponId.id = id;
         return couponId;

@@ -6,10 +6,8 @@ import com.hcs.promotion.domain.PromotionId;
 import com.hcs.promotion.domain.PromotionPeriod;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
 public class PromotionDto {
 
 	private final String promotionId;

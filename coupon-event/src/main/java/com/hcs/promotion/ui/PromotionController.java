@@ -29,7 +29,6 @@ public class PromotionController {
 
 	@GetMapping("/promotions")
 	public String promotions(PromotionSearchCondition condition, Pageable pageable, Model model){
-		log.info(condition.toString());
 		Page<PromotionDto> promotions = promotionService.findByPromotions(condition, pageable);
 		model.addAttribute("promotions", promotions);
 		return "promotion/promotionList";
