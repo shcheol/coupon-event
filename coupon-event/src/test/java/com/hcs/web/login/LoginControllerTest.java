@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
 import static com.hcs.web.login.LoginConst.LOGIN_FORM;
+import static com.hcs.web.login.LoginConst.LOGIN_MEMBER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +53,8 @@ class LoginControllerTest {
                                 .param("username", "test")
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andDo(print());
 
         verify(memberRepository).findById(any());
     }
@@ -81,5 +85,16 @@ class LoginControllerTest {
                 .andDo(print());
 
         verify(memberRepository).findById(any());
+    }
+
+    @Test
+    void logout() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(LOGIN_MEMBER, "memberId");
+
+        mockMvc.perform(get("/logout")
+                        .session(session))
+                .andExpect(status().is3xxRedirection())
+                .andDo(print());
     }
 }
