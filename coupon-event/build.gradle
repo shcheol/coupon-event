@@ -52,7 +52,7 @@ sonar {
         property 'encoding', 'UTF-8'
         property 'charSet', 'UTF-8'
         property 'sonar.exclusions', '**/dto/**,**/exception/**, ' +
-                '**/event/**,**/*Dto.java,**/*Form.java, "**/*Application.java'
+                '**/event/**,**/*Dto.java,**/*Form.java, **/*Application.java'
     }
 }
 tasks.named('test') {
