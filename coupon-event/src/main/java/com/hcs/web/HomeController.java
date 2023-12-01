@@ -29,10 +29,6 @@ public class HomeController {
 	@GetMapping("/my/main")
 	public String myPage(@SessionAttribute(name = LoginConst.LOGIN_MEMBER, required = false) MemberDto loginMember, Model model){
 
-		if (loginMember == null){
-			return "home";
-		}
-
 		model.addAttribute("member", loginMember);
 		return "my/myMain";
 	}

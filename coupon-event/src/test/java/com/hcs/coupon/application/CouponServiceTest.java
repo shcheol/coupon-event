@@ -103,7 +103,7 @@ class CouponServiceTest {
 
         MemberId memberId2 = MemberId.of("2");
         List<CouponDto> couponDtos2 = service.myCoupons(memberId2.getId());
-        assertThat(couponDtos2).hasSize(0);
+        assertThat(couponDtos2).isEmpty();
     }
 
     @Test
@@ -113,7 +113,7 @@ class CouponServiceTest {
         CouponDto findCoupon = service.findById(id.getId());
         assertThat(findCoupon.getCouponId()).isEqualTo(id.getId());
 
-        CouponId noId = CouponId.of("couponId1xxxxx");
-        assertThrows(CouponException.class, () -> service.findById(noId.getId()));
+        String noId = CouponId.of("couponId1xxxxx").getId();
+        assertThrows(CouponException.class, () -> service.findById(noId));
     }
 }
