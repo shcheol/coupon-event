@@ -19,7 +19,7 @@ public class JdbcCouponRepositoryImpl implements JdbcCouponRepository {
     @Override
     public int batchInsert(List<Coupon> couponList) {
 
-        String sql = "INSERT INTO coupon (coupon_id, promotion_id, discount_policy, during_date, issued_date, member_id, state) " +
+        String sql = "INSERT INTO coupon (coupon_id, promotion_id, issued_date, discount_policy, during_date, member_id, state) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         int[] ints = jdbcTemplate.batchUpdate(sql,
@@ -28,8 +28,8 @@ public class JdbcCouponRepositoryImpl implements JdbcCouponRepository {
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setObject(1, couponList.get(i).getCouponId().getId());
                         ps.setObject(2, couponList.get(i).getPromotionId().getId());
-                        ps.setObject(3, couponList.get(i).getDetails().getDiscountPolicy().name());
-                        ps.setObject(4, null);
+                        ps.setObject(3, null);
+						ps.setObject(4, couponList.get(i).getDetails().getDiscountPolicy().name());
                         ps.setObject(5, couponList.get(i).getDetails().getDuringDate());
                         ps.setObject(6, null);
                         ps.setObject(7, couponList.get(i).getState().name());

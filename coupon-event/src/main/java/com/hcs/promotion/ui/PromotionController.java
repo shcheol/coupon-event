@@ -41,7 +41,7 @@ public class PromotionController {
 
 		PromotionDto promotionDto = promotionService.findByPromotionId(promotionId);
 		model.addAttribute("promotion", promotionDto);
-		int count = couponService.count(promotionId);
+		long count = couponService.count(promotionId);
 		model.addAttribute("stock",count);
 		if(loginMember == null){
 			model.addAttribute("member", new MemberDto(""));

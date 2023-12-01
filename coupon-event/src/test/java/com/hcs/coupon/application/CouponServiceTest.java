@@ -13,16 +13,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 @Sql("classpath:test-init.sql")
 class CouponServiceTest {
 
@@ -42,6 +44,29 @@ class CouponServiceTest {
         assertThat(coupon.getMemberId()).isEqualTo(MemberId.of("1"));
         assertThat(coupon.getState()).isEqualTo(CouponState.ISSUED);
     }
+
+	@Test
+	@DisplayName("쿠폰발급-동시요청")
+	void issueConcurrency() throws InterruptedException {
+
+		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).hasSize(10);
+
+		ExecutorService es = Executors.newFixedThreadPool(4);
+		CountDownLatch countDownLatch = new CountDownLatch(10);
+		for (int i=0;i<10;i++) {
+			es.execute(() -> {
+				service.issue(new CouponIssuedEvent(UUID.randomUUID().toString(), "promotion4"));
+				countDownLatch.countDown();
+			});
+		}
+
+		countDownLatch.await();
+
+		es.shutdown();
+		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).isEmpty();
+
+
+	}
 
     @Test
     @DisplayName("쿠폰발급 실패 수량부족")
@@ -87,11 +112,11 @@ class CouponServiceTest {
     @Test
     void count(){
         PromotionId promotionTest2 = PromotionId.of("promotion2");
-        int count1 = service.count(promotionTest2.getId());
+        long count1 = service.count(promotionTest2.getId());
         assertThat(count1).isEqualTo(2);
 
         PromotionId promotionTest3 = PromotionId.of("promotion3");
-        int count2 = service.count(promotionTest3.getId());
+        long count2 = service.count(promotionTest3.getId());
         assertThat(count2).isEqualTo(1);
     }
 

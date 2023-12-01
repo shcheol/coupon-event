@@ -10,14 +10,16 @@ import com.hcs.coupon.dto.CouponSearchCondition;
 import com.hcs.coupon.infra.repository.CouponRepository;
 import com.hcs.member.MemberId;
 import com.hcs.promotion.domain.PromotionCreatedEvent;
+import com.hcs.promotion.domain.PromotionId;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class CouponService {
@@ -34,32 +36,36 @@ public class CouponService {
                 Coupon.createAll(event.getPromotionId(), event.getQuantity(), event.getDetails()));
     }
 
-    public int count(String promotionId){
-        CouponSearchCondition condition = new CouponSearchCondition(null, promotionId);
-
-        List<CouponId> coupons = couponRepository.findCouponsInPromotion(
-                condition);
-
-        return coupons.size();
+    public long count(String promotionId){
+		return couponRepository.countCouponsByPromotionIdAndMemberIdIsNull(PromotionId.of(promotionId));
     }
+
+	@Transactional
     public CouponId issue(CouponIssuedEvent event){
+
         CouponSearchCondition condition = new CouponSearchCondition(event.getMemberId(), event.getPromotionId());
-        CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
-        if (couponWithMember != null){
-            throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
-        }
+		log.info("coupon issue event {}", event);
+		checkDuplicateParticipation(condition);
 
-        List<CouponId> coupons = couponRepository.findCouponsInPromotion(
-                condition);
+		Coupon coupon = couponRepository.findCouponInPromotionAndCanIssue(condition)
+				.orElseThrow(() -> {
+					log.info("member {} {}", condition.memberId(), CouponError.EMPTY_STOCK.getMessage());
+					throw new CouponException(CouponError.EMPTY_STOCK);
+				});
 
-        if (coupons.isEmpty()){
-            throw new CouponException(CouponError.EMPTY_STOCK);
-        }
-        CouponId couponId = coupons.get(0);
-        Optional<Coupon> coupon = couponRepository.findById(couponId);
-        coupon.get().issuedCoupon(MemberId.of(event.getMemberId()));
-        return coupon.get().getCouponId();
+        coupon.issuedCoupon(MemberId.of(event.getMemberId()));
+		log.info("member {} issue coupon", condition.memberId());
+
+        return coupon.getCouponId();
     }
+
+	private void checkDuplicateParticipation(CouponSearchCondition condition) {
+		CouponId couponWithMember = couponRepository.findAssignedCoupon(condition);
+		if (couponWithMember != null){
+			log.info("member {} {}", condition.memberId(), CouponError.DUPLICATE_PARTICIPATION.getMessage());
+			throw new CouponException(CouponError.DUPLICATE_PARTICIPATION);
+		}
+	}
 
 	public List<CouponDto> myCoupons(String memberId){
 		return couponRepository.findMyCoupons(memberId);

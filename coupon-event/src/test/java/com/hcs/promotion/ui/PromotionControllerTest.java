@@ -122,7 +122,7 @@ class PromotionControllerTest {
 
         when(promotionService.findByPromotionId(any()))
                 .thenReturn(dto);
-        int stock = 3;
+        long stock = 3;
         when(couponService.count(any()))
                 .thenReturn(stock);
 
@@ -151,7 +151,7 @@ class PromotionControllerTest {
 
         when(promotionService.findByPromotionId(any()))
                 .thenReturn(dto);
-        int stock = 3;
+        long stock = 3;
         when(couponService.count(any()))
                 .thenReturn(stock);
 
