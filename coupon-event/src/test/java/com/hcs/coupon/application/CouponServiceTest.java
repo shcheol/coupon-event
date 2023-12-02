@@ -51,8 +51,9 @@ class CouponServiceTest {
 
 		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).hasSize(10);
 
-		ExecutorService es = Executors.newFixedThreadPool(4);
+		ExecutorService es = Executors.newFixedThreadPool(10);
 		CountDownLatch countDownLatch = new CountDownLatch(10);
+        long start = System.currentTimeMillis();
 		for (int i=0;i<10;i++) {
 			es.execute(() -> {
 				service.issue(new CouponIssuedEvent(UUID.randomUUID().toString(), "promotion4"));
@@ -61,6 +62,8 @@ class CouponServiceTest {
 		}
 
 		countDownLatch.await();
+        long end = System.currentTimeMillis();
+        System.out.println("실행 시간: " + (end -start));
 
 		es.shutdown();
 		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).isEmpty();

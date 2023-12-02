@@ -13,6 +13,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
+import org.hibernate.cfg.AvailableSettings;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -51,6 +54,11 @@ public class CustomCouponRepositoryImpl implements CustomCouponRepository {
 						.orderBy(new OrderSpecifier<>(Order.ASC, coupon.couponId.id))
 						.limit(1)
 						.setLockMode(LockModeType.PESSIMISTIC_WRITE)
+						.setHint(
+								AvailableSettings.JAKARTA_LOCK_TIMEOUT,
+								LockOptions.SKIP_LOCKED
+//								LockMode.UPGRADE_SKIPLOCKED.toLockOptions().getTimeOut()
+						)
 						.fetchFirst());
 	}
 

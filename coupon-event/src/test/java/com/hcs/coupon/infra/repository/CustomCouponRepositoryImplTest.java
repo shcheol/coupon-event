@@ -23,7 +23,7 @@ class CustomCouponRepositoryImplTest {
     void conditionNullTest(){
         List<CouponId> couponsInPromotion = repository.findCouponsInPromotion(new CouponSearchCondition(null, null));
 
-        assertThat(couponsInPromotion).hasSize(12);
+        assertThat(couponsInPromotion).hasSize(15);
 
     }
 
