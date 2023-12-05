@@ -39,6 +39,9 @@ class PromotionPeriodTest {
         PromotionPeriod period1 = new PromotionPeriod(before,after);
         PromotionPeriod period2 = new PromotionPeriod(before,after);
 
-        assertEquals(period1, period2);
+		assertNotEquals(new PromotionPeriod(before,after), new PromotionPeriod(before, LocalDateTime.of(2024, 10, 28, 00, 10)));
+		assertEquals(period1.hashCode(), period2.hashCode());
+		assertEquals(period1, period2);
+		assertNotSame(period1, period2);
     }
 }
