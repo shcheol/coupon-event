@@ -13,7 +13,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.util.StringUtils;
