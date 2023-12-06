@@ -45,31 +45,35 @@ class CouponServiceTest {
         assertThat(coupon.getState()).isEqualTo(CouponState.ISSUED);
     }
 
-	@Test
-	@DisplayName("쿠폰발급-동시요청")
-	void issueConcurrency() throws InterruptedException {
+    @Test
+    @DisplayName("쿠폰발급-동시요청")
+    void issueConcurrency() throws InterruptedException {
 
-		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).hasSize(10);
+        assertThat(
+                repository.findCouponsInPromotion(
+                        new CouponSearchCondition(null, "promotion4"))
+        ).hasSize(10);
 
-		ExecutorService es = Executors.newFixedThreadPool(10);
-		CountDownLatch countDownLatch = new CountDownLatch(10);
+        ExecutorService es = Executors.newFixedThreadPool(10);
+        CountDownLatch countDownLatch = new CountDownLatch(10);
         long start = System.currentTimeMillis();
-		for (int i=0;i<10;i++) {
-			es.execute(() -> {
-				service.issue(new CouponIssuedEvent(UUID.randomUUID().toString(), "promotion4"));
-				countDownLatch.countDown();
-			});
-		}
+        for (int i = 0; i < 10; i++) {
+            es.execute(() -> {
+                service.issue(new CouponIssuedEvent(UUID.randomUUID().toString(), "promotion4"));
+                countDownLatch.countDown();
+            });
+        }
 
-		countDownLatch.await();
+        countDownLatch.await();
         long end = System.currentTimeMillis();
-        System.out.println("실행 시간: " + (end -start));
+        System.out.println("실행 시간: " + (end - start));
 
-		es.shutdown();
-		assertThat(repository.findCouponsInPromotion(new CouponSearchCondition(null, "promotion4"))).isEmpty();
-
-
-	}
+        es.shutdown();
+        assertThat(
+                repository.findCouponsInPromotion(
+                        new CouponSearchCondition(null, "promotion4"))
+        ).isEmpty();
+    }
 
     @Test
     @DisplayName("쿠폰발급 실패 수량부족")
@@ -113,7 +117,7 @@ class CouponServiceTest {
     }
 
     @Test
-    void count(){
+    void count() {
         PromotionId promotionTest2 = PromotionId.of("promotion2");
         long count1 = service.count(promotionTest2.getId());
         assertThat(count1).isEqualTo(2);
@@ -124,7 +128,7 @@ class CouponServiceTest {
     }
 
     @Test
-    void myCoupons(){
+    void myCoupons() {
         MemberId memberId1 = MemberId.of("1");
         List<CouponDto> couponDtos1 = service.myCoupons(memberId1.getId());
         assertThat(couponDtos1).hasSize(1);
@@ -135,7 +139,7 @@ class CouponServiceTest {
     }
 
     @Test
-    void findById(){
+    void findById() {
 
         CouponId id = CouponId.of("coupon6");
         CouponDto findCoupon = service.findById(id.getId());
